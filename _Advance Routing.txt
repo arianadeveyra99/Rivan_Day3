@@ -478,19 +478,19 @@ conf t
 
 
 Exercise 2: On A1, configure a floating default route on D1 as the primary default gateway, while D2 as the secondary. 
-On A2, configure a floating default route on D2 as the primary default gateway, while D1 as the secondary. 
+On A2, configure a floating default route on D2 as the secondary default gateway, while D1 as the secondary. 
 
 !@A1
 conf t
- ip route  0.0.0.0  0.0.0.0  __.__.__.__  __
- ip route  0.0.0.0  0.0.0.0  __.__.__.__  __
+ ip route  0.0.0.0  0.0.0.0  192.168.1.129
+ ip route  0.0.0.0  0.0.0.0  192.168.1.130
  end
 show ip route static
 
 !@A2
 conf t
- ip ____  0.0.0.0  0.0.0.0  __.__.__.__  __
- ip ____  0.0.0.0  0.0.0.0  __.__.__.__  __
+ ip route  0.0.0.0  0.0.0.0  192.168.1.130
+ ip route 0.0.0.0  0.0.0.0  192.168.1.129
  end
 show ip route static
 
