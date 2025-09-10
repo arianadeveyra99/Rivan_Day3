@@ -537,6 +537,7 @@ conf t
   
 !@D1
 config t
+NO ROUTER EIGRP 100
  router eigrp 100
   no auto-summary
   network 10.1.4.4 0.0.0.3
@@ -552,7 +553,7 @@ Exercise 03: Configure EIGRP on D2. Advertise all connected routes.
 config t
  router ____  ____
   no auto-summary
-  network __.__.__.__  __.__.__.__
+  network 10.1.4.10  __.__.__.__
   network __.__.__.__  __.__.__.__
   network __.__.__.__  __.__.__.__
   network __.__.__.__  __.__.__.__
@@ -639,10 +640,10 @@ Exercise 04: Configure OSPF on R4 with the following settings:
 
 !@R4
 conf t
- router ___  __
-  router-id __.__.__.__
-  network __.__.__.__  __.__.__.__ area __
-  network __.__.__.__  __.__.__.__ area __
+ router OSPF 1
+  router-id 4.4.4.4
+  network 10.1.1.8  0.0.0.3 area 0
+  network 4.4.4.4 0.0.0.0 area 0
   end
 
 
@@ -675,16 +676,7 @@ conf t
   end
 
 !@R1
-conf t
- router ospf 1
-  router-id 1.1.1.1
-  exit
- int lo1
-  ip ospf 1 area 0
-  exit
- int e1/0
-  ip ospf 1 area 0
-  end
+CONF 
 
 ---
 
@@ -705,9 +697,11 @@ conf t
 !@R3
 conf t
  int e1/2
-  ip ospf network point-to-point
+NO ip ospf network point-to-point
   end
-  
+
+
+CLEAR IP OSPF PROCESS
 
 !@R2
 conf t
@@ -877,10 +871,10 @@ conf t
    neighbor 24.2.4.2 activate
    neighbor 45.4.5.5 activate
    neighbor 208.8.8.1 activate
-   network 208.8.8.0 mask 255.255.255.0
-   network 24.2.4.0 mask 255.255.255.0
-   network 44.44.44.44 mask 255.255.255.255
-   network 45.4.5.0 mask 255.255.255.0
+   network 208.8.8.0 activate 255.255.255.0
+   network 24.2.4.0 activate 255.255.255.0
+   network 44.44.44.44 activate 255.255.255.255
+   network 45.4.5.0 activate 255.255.255.0
    end
 
 !@I3 - GLOBE
@@ -905,11 +899,11 @@ config t
   neighbor 35.3.5.3 remote-as 3
   neighbor 45.4.5.4 remote-as 45
   address-family ipv4
-   network 8.8.8.8 mask 255.255.255.255
-   network 55.55.55.55 mask 255.255.255.255
-   network 25.2.5.0 mask 255.255.255.0
-   network 35.3.5.0 mask 255.255.255.0
-   network 45.4.5.0 mask 255.255.255.0
+   network 8.8.8.8 activate 255.255.255.255
+   network 55.55.55.55 activate 255.255.255.255
+   network 25.2.5.0 activate 255.255.255.0
+   network 35.3.5.0 activate 255.255.255.0
+   network 45.4.5.0 activate 255.255.255.0
 end
 
 
@@ -917,18 +911,18 @@ Exercise 06: Configure BGP on I2(PLDT). Set the ASN number to 2.
 
 !@I2 - PLDT
 config t
- router bgp __
+ router bgp 2
  bgp log-neighbor-changes
- neighbor __.__.__.__ remote-as __
- neighbor __.__.__.__  remote-as __
- neighbor __.__.__.__  remote-as __
- neighbor __.__.__.__  remote-as __
- address-family __
-  network __.__.__.__ mask __.__.__.__
-  network __.__.__.__ mask __.__.__.__
-  network __.__.__.__ mask __.__.__.__
-  network __.__.__.__ mask __.__.__.__
-  network __.__.__.__ mask __.__.__.__
+ neighbor 24.2.4.4 remote-as 45 
+ neighbor 25.2.5.5  remote-as 45
+ neighbor 32.3.2.3 remote-as 3
+ neighbor 207.7.7.1 remote-as 1
+ address-family ipv4
+  network 207.0.0.0 activate. 255.255.255.0
+  network 22.22.22.22 activate 255.255.255.255
+  network 24.2.4.0 activate 255.255.255.0
+  network 25.2.5.0 activate 255.255.255.0
+  network 32.3.2.0 activate 255.255.255.0
   end
 
 Ans
@@ -953,12 +947,18 @@ config t
 
 BGP - OSPF Redistribution
 
+
+
 !@R1
 conf t
  router ospf 1
   default-information originate always
-  
----
+
+
+Recipe for NAT
+1.Specify outside and inside
+2.Congifure an AC:(Which IPs are allowed to pass)
+3.PAT(Port Address Translation)
 
 NAT
 
